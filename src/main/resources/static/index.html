@@ -3,19 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>JoppotUnity</title>
-    <!--    <link rel="stylesheet" href="/CSS/templates.css">-->
+    <link rel="stylesheet" href="/CSS/banner.css">
     <link rel="stylesheet" href="/CSS/header.css">
     <style>
         h1 {
             text-align: center;
             margin-top: 20px;
         }
+
+        .container {
+            padding: 20px;
+            margin-top: 100px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+            margin: 0;
+        }
+
     </style>
 
 </head>
 <body>
 <header>
-    <h1><strong>J</strong>oppot<strong>U</strong>nity</h1>
+    <div class="web_title">
+        <span class="title_content"><strong>J</strong>oppot<strong>U</strong>nity</span>
+    </div>
     <nav class="header">
         <ul>
             <li><a href="/">Home</a></li>
@@ -25,3 +39,33 @@
         </ul>
     </nav>
 </header>
+
+<div class="container">
+    <div class="information">
+        <h1>Welcome to <strong>JoppotUnity</strong></h1>
+        <p>
+            JoppotUnity is a job portal website that helps you find the right job for you.
+        </p>
+        <p>
+            You can search for jobs by skills, location, or job title. You can also search for candidates by skills,
+            name,
+            or location.
+        </p>
+        <p>
+            If you are a company, you can post job openings and search for candidates that match your job requirements.
+        </p>
+        <p>
+            If you are a candidate, you can post your resume and search for jobs that match your skills and experience.
+        </p>
+    </div>
+    <div class="background_image">
+
+    </div>
+    <div class="action">
+        <h1>You're looking for...</h1>
+        <button onclick="location.href='/candidates'">Candidates</button>
+        <button onclick="location.href='/companies'">Companies</button>
+        <button onclick="location.href='/jobs'">Jobs</button>
+    </div>
+</div>
+</body>

@@ -5,35 +5,7 @@
     <title>JoppotUnity</title>
     <link rel="stylesheet" href="/CSS/templates.css">
     <link rel="stylesheet" href="/CSS/header.css">
-
-    <style>
-        input[type="text"], input[type="date"], select {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link rel="stylesheet" href="/CSS/inputSubmit.css">
 </head>
 <header>
     <nav class="header">
@@ -77,7 +49,7 @@
             <th>Skill</th>
             <th>Action</th>
         </tr>
-        <tr th:each="candidate, isStat : ${candidates}">
+        <tr th:each="candidate, isStat : ${candidatePage.content}">
             <td th:text="${isStat.index + 1}"></td>
             <td th:text="${candidate.fullName}"></td>
             <td th:text="${candidate.dob}"></td>
@@ -89,6 +61,7 @@
                     <li th:each="skill : ${candidate.getCandidateSkills()}"
                         th:text="${skill.skill.skillName +' :' + skill.skillLevel}"></li>
                 </ul>
+            </td>
             <td>
                 <form th:action="@{/jobs/{id}/{jobId}/{candidateId}/send-email(jobId = ${job.id}, candidateId = ${candidate.id}, id = ${company.id})}"
                       method="post"
@@ -98,6 +71,17 @@
             </td>
         </tr>
     </table>
+    <div class="inline" th:if="${candidatePage.totalPages > 0}" th:each="pageNumbers : ${pageNumbers}">
+        <a th:href="@{/jobs/show_candidate_matching/{id}/{jobID}(size=${candidatePage.size}, page=${pageNumbers}, search=${search}, id=${company.id}, jobID=${job.id})}"
+           th:if="${search != null and search != ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == candidatePage.number + 1} ? 'active' : ''"></a>
+        <a th:href="@{/jobs/show_candidate_matching/{id}/{jobID}(size=${candidatePage.size}, page=${pageNumbers}, id=${company.id}, jobID=${job.id})}"
+
+           th:if="${search == null or search == ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == candidatePage.number + 1} ? 'active' : ''"></a>
+    </div>
 </div>
 </body>
 </html>

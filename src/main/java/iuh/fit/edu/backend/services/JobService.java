@@ -7,10 +7,7 @@ import iuh.fit.edu.backend.models.Skill;
 import iuh.fit.edu.backend.repositories.CandidateRepository;
 import iuh.fit.edu.backend.repositories.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,19 +46,22 @@ public class JobService {
     }
 
 
-    public List<Job> findJobsForCandidate(Long candidateId) {
+    public Page<Job> findJobsForCandidate(Long candidateId, int page, int size, String sortBy, String sortDirection) {
         Optional<Candidate> candidate = candidateRepository.findById(candidateId);
-        return candidate.get()
-                .getCandidateSkills().stream()
-                .map(
-                        candidateSkill ->
-                                jobRepository.findJobsBySkillLevelAndSkillName(
-                                        candidateSkill.getSkillLevel(), candidateSkill.getSkill().getSkillName()
-                                )
-                )
-                .flatMap(List::stream)
-                .toList();
-
+        if (candidate.isPresent()) {
+            List<Job> jobs = candidate.get()
+                    .getCandidateSkills().stream()
+                    .map(candidateSkill -> jobRepository.findJobsBySkillLevelAndSkillName(
+                            candidateSkill.getSkillLevel(), candidateSkill.getSkill().getSkillName()))
+                    .flatMap(List::stream)
+                    .toList();
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), jobs.size());
+            return new PageImpl<>(jobs.subList(start, end), pageable, jobs.size());
+        } else {
+            return Page.empty();
+        }
     }
 
 }

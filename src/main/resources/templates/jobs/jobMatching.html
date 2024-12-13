@@ -48,6 +48,16 @@
 
         </tr>
     </table>
+    <div class="inline" th:if="${jobs.totalPages > 0}" th:each="pageNumbers : ${pageNumbers}">
+        <a th:href="@{/candidates/show_job_match/{id}(size=${jobs.size}, page=${pageNumbers}, search=${search}, id=${candidate.id})}"
+           th:if="${search != null and search != ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == jobs.number + 1} ? 'active' : ''"></a>
+        <a th:href="@{/candidates/show_job_match/{id}(size=${jobs.size}, page=${pageNumbers}, id=${candidate.id})}"
+           th:if="${search == null or search == ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == jobs.number + 1} ? 'active' : ''"></a>
+    </div>
 </div>
 </body>
 </html>

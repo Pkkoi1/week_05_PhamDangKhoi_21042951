@@ -12,6 +12,9 @@ import iuh.fit.edu.backend.services.EmailService;
 import iuh.fit.edu.backend.services.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -124,21 +127,35 @@ public class jobController {
     @GetMapping("/show_candidate_matching/{id}/{jobID}")
     public String showCandidateMatching(Model model, @PathVariable("id") Long id,
                                         @PathVariable("jobID") Long jobID,
+                                        @RequestParam("page") Optional<Integer> page,
+                                        @RequestParam("size") Optional<Integer> size,
                                         Optional<String> search) {
 
         Company company = companyRespository.findById(id).get();
-
         model.addAttribute("company", company);
         model.addAttribute("job", jobRepository.findById(jobID).get());
+
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(10);
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+
+        Page<Candidate> candidatePage;
         if (search.isPresent()) {
-            List<Candidate> candidates = candidateService.findMatchingCandidatesByKey(jobID, search.get());
-            model.addAttribute("candidates", candidates);
-            return "jobs/CandidateMatching";
+            candidatePage = candidateService.findMatchingCandidatesByKey(jobID, search.get(), currentPage - 1, pageSize, "id", "asc");
         } else {
-            List<Candidate> candidates = candidateService.findMatchingCandidates(jobID);
-            model.addAttribute("candidates", candidates);
-            return "jobs/CandidateMatching";
+            candidatePage = candidateService.findMatchingCandidates(jobID, currentPage - 1, pageSize, "id", "asc");
         }
+
+        model.addAttribute("candidatePage", candidatePage);
+        int totalPages = candidatePage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "jobs/CandidateMatching";
     }
 
     @PostMapping("/{id}/{jobId}/{candidateId}/send-email")

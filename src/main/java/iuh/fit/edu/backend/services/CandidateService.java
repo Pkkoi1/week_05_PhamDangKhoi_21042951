@@ -66,20 +66,28 @@ public class CandidateService {
         return candidatePage;
     }
 
-    public List<Candidate> findMatchingCandidates(Long jobId) {
+    public Page<Candidate> findMatchingCandidates(Long jobId, int page, int size, String sortBy, String sortDirection) {
         Job job = jobService.findById(jobId);
-        return job.getJobSkills().stream()
+        List<Candidate> candidates = job.getJobSkills().stream()
                 .map(jobSkill -> candidateRepository.findMatchingCandidates(jobSkill.getSkillLevel(), jobSkill.getSkill().getSkillName()))
                 .flatMap(List::stream)
                 .toList();
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), candidates.size());
+        return new PageImpl<>(candidates.subList(start, end), pageable, candidates.size());
     }
 
-    public List<Candidate> findMatchingCandidatesByKey(Long jonId, String key) {
-        Job job = jobService.findById(jonId);
-        return job.getJobSkills().stream()
+    public Page<Candidate> findMatchingCandidatesByKey(Long jobId, String key, int page, int size, String sortBy, String sortDirection) {
+        Job job = jobService.findById(jobId);
+        List<Candidate> candidates = job.getJobSkills().stream()
                 .map(jobSkill -> candidateRepository.findMatchingCandidatesByKey(jobSkill.getSkillLevel(), jobSkill.getSkill().getSkillName(), key))
                 .flatMap(List::stream)
                 .toList();
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), candidates.size());
+        return new PageImpl<>(candidates.subList(start, end), pageable, candidates.size());
     }
 
     public List<String> suggestSkills(Long candidateID) {

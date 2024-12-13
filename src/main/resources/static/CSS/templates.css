@@ -35,8 +35,8 @@ th, td {
 }
 
 th {
-    background-color: #007bff;
-    color: white;
+    background-color: #d9d9db;
+    color: #242323;
     font-weight: bold;
 }
 
@@ -81,7 +81,7 @@ div.inline {
 
 button {
     padding: 10px 20px;
-    background-color: #28a745;
+    background-color: #f7c235;
     color: white;
     border: none;
     cursor: pointer;
@@ -90,7 +90,7 @@ button {
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #c6940b;
 }
 
 li {

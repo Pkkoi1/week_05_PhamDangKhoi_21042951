@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+
 @Controller
 @RequestMapping("/candidates")
 public class CandidateController {
@@ -180,13 +181,27 @@ public class CandidateController {
     }
 
     @GetMapping("/show_job_match/{id}")
-    public String showJobMatch(@PathVariable("id") Long id, Model model) {
+    public String showJobMatch(@PathVariable("id") Long id, Model model,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("size") Optional<Integer> size,
+                               @RequestParam("sortBy") Optional<String> sortBy,
+                               @RequestParam("sortDirection") Optional<String> sortDirection) {
         ModelAndView modelAndView = new ModelAndView();
-        List<Job> jobs = jobService.findJobsForCandidate(id);
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(10);
+        String sortByField = sortBy.orElse("id");
+        String sortDir = sortDirection.orElse("asc");
+        Page<Job> jobs = jobService.findJobsForCandidate(id, currentPage - 1, pageSize, sortByField, sortDir);
         Candidate candidate = candidateRepository.findById(id).get();
-        System.out.println(jobs.size());
         model.addAttribute("candidate", candidate);
         model.addAttribute("jobs", jobs);
+        int totalPages = jobs.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
         return "jobs/jobMatching";
     }
 
