@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+    <style>
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <h1>Add new Company</h1>
+    <button type="button" onclick="location.href='http://localhost:8080/companies'">Back</button>
+    <form action="#" th:action="@{/companies/save}" th:object="${company}" method="post">
+        <table>
+            <tr>
+                <td><label for="name">Name:</label></td>
+                <td><input type="text" id="name" name="comp_name" th:field="*{compName}"></td>
+            </tr>
+            <tr>
+                <td><label for="email">Email:</label></td>
+                <td><input type="text" id="email" name="email" th:field="*{email}"></td>
+            </tr>
+            <tr>
+                <td><label for="phone">Phone number:</label></td>
+                <td><input type="text" id="phone" name="phone" th:field="*{phone}"></td>
+            </tr>
+            <tr>
+                <td><label for="url">URL:</label></td>
+                <td><input type="text" id="url" name="web_url" th:field="*{webUrl}"></td>
+            </tr>
+            <tr>
+                <td><label for="about">About:</label></td>
+                <td><input type="text" id="about" name="about" th:field="*{about}"></td>
+            </tr>
+            <tr>
+                <td><input type="hidden"></td>
+                <td><label>Number</label></td>
+                <td><label>Zipcode</label></td>
+                <td><label>Street</label></td>
+                <td><label>City</label></td>
+                <td><label>Country</label>
+            </tr>
+            <tr>
+                <td><label>Address:</label></td>
+                <td><input type="text" id="address" th:field="*{address.number}"></td>
+                <td><input type="text" id="zipcode" th:field="*{address.zipcode}"></td>
+                <td><input type="text" id="street" th:field="*{address.street}"></td>
+                <td><input type="text" id="city" th:field="*{address.city}"></td>
+                <td>
+                    <select id="country" th:field="*{address.country}">
+                        <option th:each="Country : ${country}"
+                                th:value="${Country.getAlpha2()}"
+                                th:text="${Country.getName()}">
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="submit" value="Add Company">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

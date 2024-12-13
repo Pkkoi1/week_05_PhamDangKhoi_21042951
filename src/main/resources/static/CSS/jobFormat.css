@@ -1,0 +1,53 @@
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.job-container {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 16px;
+    margin-top: 5%;
+}
+
+.job-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 40vh;
+    height: 40vh;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.job-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.job-card h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.2em;
+}
+
+.job-card p {
+    margin: 4px 0;
+}
+
+.job-card ul {
+    padding-left: 20px;
+}
+
+.job-card ul li {
+    margin: 4px 0;
+}
+
+.title {
+    border-bottom: #333333 1px solid;
+}
+
+strong {
+    color: #111111;
+}

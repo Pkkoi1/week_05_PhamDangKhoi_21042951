@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <h1>Job Matching</h1>
+    <div>
+        <p>Candidate Name: <span th:text="${candidate.fullName}"></span></p>
+    </div>
+    <button type="button" onclick="location.href='/candidates'">Back</button>
+    <table>
+        <tr>
+            <th>No.</th>
+            <th>Job Title</th>
+            <th>Job Description</th>
+            <th>Skills</th>
+            <th>Company Required</th>
+        </tr>
+        <tr th:each="job, iterStat: ${jobs}">
+            <td th:text="${iterStat.index + 1}"></td>
+            <td th:text="${job.jobName}"></td>
+            <td th:text="${job.jobDesc}"></td>
+            <td>
+                <ul>
+                    <li th:each="skill : ${job.getJobSkills()}"
+                        th:text="${skill.skill.skillName} + ' ,' + ${skill.skill.type} + ': ' + ${skill.skillLevel}"></li>
+                </ul>
+            </td>
+            <td><a th:text="${job.company.compName}"
+                   th:href="@{/jobs/{id}(id=${job.company.id})}"></a>
+            </td>
+
+        </tr>
+    </table>
+</div>
+</body>
+</html>

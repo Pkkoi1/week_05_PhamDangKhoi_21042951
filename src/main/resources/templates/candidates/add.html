@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/addCandidateFormat.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+    
+    <script>
+        function addJobSkillRow() {
+            const tbody = document.getElementById("jobSkillsTableBody");
+            const lastRow = tbody.rows[tbody.rows.length - 1];
+            const newRow = lastRow.cloneNode(true);
+            const inputs = newRow.getElementsByTagName("input");
+            const selects = newRow.getElementsByTagName("select");
+            for (let input of inputs) {
+                input.value = "";
+            }
+            for (let select of selects) {
+                select.selectedIndex = 0;
+            }
+            const rowIndex = tbody.rows.length;
+            for (let select of selects) {
+                const thName = select.getAttribute("th:name");
+                if (thName) {
+                    const newThName = thName.replace(/\[.*?\]/, `[${rowIndex}]`);
+                    select.setAttribute("th:name", newThName);
+                }
+            }
+            for (let input of inputs) {
+                const thName = input.getAttribute("th:name");
+                if (thName) {
+                    const newThName = thName.replace(/\[.*?\]/, `[${rowIndex}]`);
+                    input.setAttribute("th:name", newThName);
+                }
+            }
+
+            tbody.appendChild(newRow);
+        }
+
+        function removeJobSkillRow() {
+            const tbody = document.getElementById("jobSkillsTableBody");
+            if (tbody.rows.length > 1) {
+                tbody.removeChild(tbody.rows[tbody.rows.length - 1]);
+            }
+        }
+    </script>
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <h1>Add new Candidate</h1>
+    <button type="button" onclick="location.href='http://localhost:8080/candidates'">Back</button>
+    <form action="#" th:action="@{/candidates/save}" th:object="${candidate}" method="post">
+        <table>
+            <tr>
+                <td><label for="full_name">Name:</label></td>
+                <td><input type="text" id="full_name" name="full_name" th:field="*{fullName}"></td>
+            </tr>
+            <tr>
+                <td><label for="email">Email:</label></td>
+                <td><input type="text" id="email" name="email" th:field="*{email}"></td>
+            </tr>
+            <tr>
+                <td><label for="dob">Date of Birth:</label></td>
+                <td><input type="date" id="dob" name="dob" th:field="*{dob}"></td>
+            </tr>
+            <tr>
+                <td><label for="phone">Phone number:</label></td>
+                <td><input type="text" id="phone" name="phone" th:field="*{phone}"></td>
+            </tr>
+            <tr>
+                <td><input type="hidden"></td>
+                <td><label>Number</label></td>
+                <td><label>Zipcode</label></td>
+                <td><label>Street</label></td>
+                <td><label>City</label></td>
+                <td><label>Country</label>
+            </tr>
+            <tr>
+                <td><label>Address:</label></td>
+                <td><input type="text" id="address" th:field="*{address.number}"></td>
+                <td><input type="text" id="zipcode" th:field="*{address.zipcode}"></td>
+                <td><input type="text" id="street" th:field="*{address.street}"></td>
+                <td><input type="text" id="city" th:field="*{address.city}"></td>
+                <td>
+                    <select id="country" th:field="*{address.country}">
+                        <option th:each="Country : ${country}"
+                                th:value="${Country.getAlpha2()}"
+                                th:text="${Country.getName()}">
+                        </option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <table id="jobSkillsTable">
+            <thead>
+            <tr>
+                <td colspan="3">Skills Requiring:</td>
+            </tr>
+            </thead>
+            <tbody id="jobSkillsTableBody">
+            <tr>
+                <td>
+                    <select th:name="skills">
+                        <option value="">--Choose a skill--</option>
+                        <option th:each="availableSkill : ${skills}" th:value="${availableSkill.id}"
+                                th:text="${availableSkill.skillName}"></option>
+                    </select>
+                </td>
+                <td>
+                    <select th:name="skillLevels">
+                        <option th:each="level : ${skillLevels}" th:value="${level}"
+                                th:text="${level}"></option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" th:name="moreInfos" placeholder="More Infos"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button type="button" onclick="addJobSkillRow()">+</button>
+        <button type="button" onclick="removeJobSkillRow()">-</button>
+
+        <input type="submit" value="Add Candidate">
+    </form>
+</div>
+</body>
+</html>

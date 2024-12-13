@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+    <style>
+        .skills {
+            list-style-type: circle;
+        }
+    </style>
+
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <h1>List Candidate</h1>
+    <button class="btn" type="button" onclick="location.href='http://localhost:8080'">Back</button>
+
+    <button id="addBtn" onclick="location.href='/candidates/show_add_form'">
+        Add Candidate
+    </button>
+    <form action="/candidates" method="get">
+        <input type="text" name="search" placeholder="Search: skills, name, phone, email...">
+        <button type="submit">Find</button>
+    </form>
+    <table>
+        <tr>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Skill</th>
+            <th>Edit</th>
+            <th>Detail</th>
+            <th>Jobs Matching</th>
+        </tr>
+        <tr th:each="candidate, iStat : ${candidatePage.content}">
+            <td th:text="${candidatePage.number * candidatePage.size + iStat.index + 1}"></td>
+            <td th:text="${candidate.fullName}"></td>
+            <td th:text="${candidate.dob}"></td>
+            <td th:text="${candidate.address.street + ', ' + candidate.address.city+ ', ' + candidate.address.country.getName()}"></td>
+            <td th:text="${candidate.phone}"></td>
+            <td th:text="${candidate.email}"></td>
+            <td>
+                <ul>
+                    <li th:each="skill : ${candidate.getCandidateSkills()}"
+                        th:text="${skill.skill.skillName +' :' + skill.skillLevel}"
+                        class="skills"></li>
+                </ul>
+            </td>
+            <td>
+                <form th:action="@{/candidates/show_edit_form/{id}(id=${candidate.id})}" method="get"
+                      style="display:inline;">
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/candidates/detail/{id}(id=${candidate.id})}" method="get" style="display:inline;">
+                    <button type="submit">Detail</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/candidates/show_job_match/{id}(id=${candidate.id})}" method="get"
+                      style="display:inline;">
+                    <button type="submit">Job Matching</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <div class="inline" th:if="${candidatePage.totalPages > 0}" th:each="pageNumbers : ${pageNumbers}">
+        <a th:href="@{/candidates(size=${candidatePage.size}, page=${pageNumbers}, search=${search})}"
+           th:if="${search != null and search != ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == candidatePage.number + 1} ? 'active' : ''"></a>
+        <a th:href="@{/candidates(size=${candidatePage.size}, page=${pageNumbers})}"
+           th:if="${search == null or search == ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == candidatePage.number + 1} ? 'active' : ''"></a>
+    </div>
+</div>
+</body>
+</html>

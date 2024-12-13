@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+    <style>
+        .skills {
+            list-style-type: circle;
+        }
+
+        .company {
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+    </style>
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <button class="btn" type="button" onclick="location.href='/jobs'">Back</button>
+    <div class="job-container">
+        <div th:each="job : ${job}">
+            <h2 th:text="'Name: ' + ${job.jobName}">Job Title</h2>
+            <p th:text="'Description: ' + ${job.jobDesc}">Description</p>
+            <h3>Skills Required</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Skill</th>
+                    <th>Level</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="skill : ${job.jobSkills}">
+                    <td th:text="${skill.skill.skillName}">Skill</td>
+                    <td th:text="${skill.skillLevel}">Level</td>
+                </tr>
+                </tbody>
+            </table>
+            <a th:href="@{'/companies/' + ${job.company.id}}" class="company"
+               th:text="'Company: ' + ${job.company.compName}">Company</a>
+            <h3>Another Jobs</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Skills</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="otherJob : ${otherJobs}">
+                    <td th:text="${otherJob.jobName}">Job Title</td>
+                    <td>
+                        <ul>
+                            <li th:each="skill : ${otherJob.jobSkills}"
+                                th:text="${skill.skill.skillName} + ' ,' + ${skill.skill.type} + ': ' + ${skill.skillLevel}"
+                                class="skills"></li>
+                        </ul>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

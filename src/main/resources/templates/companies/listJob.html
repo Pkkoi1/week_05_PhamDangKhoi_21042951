@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+    <style>
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .skills {
+            list-style-type: circle;
+        }
+    </style>
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <form action="/companies" method="get">
+        <button type="submit">Back</button>
+    </form>
+    <h1>About company</h1>
+    <div>
+        <p>Company name: <span th:text="${company.compName}"></span></p>
+        <p>Email: <span th:text="${company.email}"></span></p>
+        <p>Phone: <span th:text="${company.phone}"></span></p>
+        <p>Web URL: <span th:text="${company.webUrl}"></span></p>
+        <p>About: <span th:text="${company.about}"></span></p>
+        <p>Address: <span
+                th:text="${company.address.street} +' ,' + ${company.address.city} +' ,' + ${company.address.country.getName()}"></span>
+        </p>
+    </div>
+    <h1>Jobs</h1>
+    <form th:action="@{/jobs/show_add_form/{id}(id=${company.id})}" method="get" style="display:inline;">
+        <button type="submit">Add</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>No.</th>
+            <th>Job Title</th>
+            <th>Job Description</th>
+            <th>Skills</th>
+            <th>Action</th>
+            <th>View candidate suitable</th>
+        </tr>
+        <tr th:each="job, iStat : ${jobPage.content}">
+            <td th:text="${iStat.index + 1}"></td>
+            <td th:text="${job.jobName}"></td>
+            <td th:text="${job.jobDesc}"></td>
+            <td>
+                <ul>
+                    <li th:each="skill : ${job.getJobSkills()}"
+                        th:text="${skill.skill.skillName} + ' ,' + ${skill.skill.type} + ': ' + ${skill.skillLevel}"
+                        class="skills"></li>
+                </ul>
+            </td>
+            <td>
+                <a th:href="@{/jobs/edit/{id}(id = ${job.id})}">Edit</a>
+            </td>
+            <td>
+                <form th:action="@{/jobs/show_candidate_matching/{id}/{jobID}(id=${company.id}, jobID=${job.id})}"
+                      method="get" style="display:inline;">
+                    <button type="submit">View</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

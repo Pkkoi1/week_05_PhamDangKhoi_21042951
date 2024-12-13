@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .jobs {
+            list-style-type: circle;
+        }
+
+    </style>
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <h1>List company</h1>
+    <button class="btn" type="button" onclick="location.href='http://localhost:8080'">Back</button>
+    <button id="addBtn" onclick="location.href='/companies/show_add_form'">
+        Add Company
+    </button>
+
+    <form action="/companies/" method="get" style="margin-top: 1%">
+        <input type="text" name="search" placeholder="Search: Jobs, name, phone, email...">
+        <button type="submit">Find</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>About</th>
+            <th>Job</th>
+            <th>Detail</th>
+            <th>Edit</th>
+        </tr>
+        <tr th:each="company, iStat : ${companyPage.content}">
+            <td th:text="${companyPage.number * companyPage.size + iStat.index + 1}"></td>
+            <td>
+                <a th:href="${company.webUrl}" th:text="${company.compName}" th:title="${company.webUrl}"></a>
+            </td>
+            <td th:text="${company.email}"></td>
+            <td th:text="${company.address.street + ', ' + company.address.city+ ', ' + company.address.country.getName()}"></td>
+            <td th:text="${company.phone}"></td>
+            <td th:text="${company.about}"></td>
+            <td>
+                <ul>
+                    <li th:each="job : ${company.getJobs()}"
+                        th:text="${job.jobName}"
+                        class="jobs"></li>
+                </ul>
+            </td>
+            <td>
+                <form th:action="@{/companies/{id}(id=${company.id})}" method="get" style="display:inline;">
+                    <button type="submit">Detail</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/companies/show_edit_form/{id}(id=${company.id})}" method="get"
+                      style="display:inline;">
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <div class="inline" th:if="${companyPage.totalPages > 0}" th:each="pageNumbers : ${pageNumbers}">
+        <a th:href="@{/companies(size=${companyPage.size}, page = ${pageNumbers})}"
+           th:if="${search == null or search == ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == companyPage.number + 1} ? 'active':''"></a>
+        <a th:href="@{/companies(size=${companyPage.size}, page = ${pageNumbers}, search=${search})}"
+           th:if="${search != null and search != ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == companyPage.number + 1} ? 'active':''"></a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+    <link rel="stylesheet" href="/CSS/jobFormat.css">
+    <style>
+        .skills {
+            list-style-type: circle;
+        }
+    </style>
+
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <button class="btn" type="button" onclick="location.href='/'">Back</button>
+
+    <form action="/jobs" method="get">
+        <input type="text" name="search" placeholder="Search: job title, skills, company...">
+        <button type="submit">Find</button>
+    </form>
+
+    <div class="job-container">
+        <a th:href="@{/jobs/{id}(id=${job.id})}" th:each="job, iStat : ${jobPage.content}">
+            <div class="job-card">
+                <h2 th:text="${iStat.index + 1} + '. ' + ${job.jobName}" class="title"></h2>
+                <p><strong>Company:</strong> <a th:href="@{'/companies/' + ${job.company.id}}"
+                                                th:text="${job.company.compName}"></a></p>
+                <p><strong>Skills:</strong></p>
+                <ul>
+                    <li th:each="skill : ${job.getJobSkills()}"
+                        th:text="${skill.skill.skillName} + ' ,' + ${skill.skill.type} + ': ' + ${skill.skillLevel}"
+                        class="skills"></li>
+                </ul>
+            </div>
+        </a>
+    </div>
+
+    <div class="inline" th:if="${jobPage.totalPages > 0}" th:each="pageNumbers : ${pageNumbers}">
+        <a th:href="@{/jobs(size=${jobPage.size}, page=${pageNumbers}, search=${search})}"
+           th:if="${search != null and search != ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == jobPage.number + 1} ? 'active' : ''"></a>
+        <a th:href="@{/jobs(size=${jobPage.size}, page=${pageNumbers})}"
+           th:if="${search == null or search == ''}"
+           th:text="${pageNumbers}"
+           th:class="${pageNumbers == jobPage.number + 1} ? 'active' : ''"></a>
+    </div>
+</div>
+</body>
+</html>

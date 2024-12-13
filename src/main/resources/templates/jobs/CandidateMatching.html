@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+
+    <style>
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <h1>About company</h1>
+    <div>
+        <p>Company name: <span th:text="${company.compName}"></span></p>
+        <p>Email: <span th:text="${company.email}"></span></p>
+        <p>Phone: <span th:text="${company.phone}"></span></p>
+        <p>Web URL: <span th:text="${company.webUrl}"></span></p>
+        <p>About: <span th:text="${company.about}"></span></p>
+        <p>Address: <span
+                th:text="${company.address.street} +' ,' + ${company.address.city} +' ,' + ${company.address.country.getName()}"></span>
+        </p>
+    </div>
+    <h1>List Candidate Matching</h1>
+    <button class="btn" type="button" onclick="location.href='/companies'">Back</button>
+
+    <form th:action="@{/jobs/show_candidate_matching/{id}/{jobID}(id=${company.id}, jobID=${job.id})}" method="get">
+        <input type="text" name="search" placeholder="Search: skills, name, phone, email...">
+        <button type="submit">Find</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Skill</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="candidate, isStat : ${candidates}">
+            <td th:text="${isStat.index + 1}"></td>
+            <td th:text="${candidate.fullName}"></td>
+            <td th:text="${candidate.dob}"></td>
+            <td th:text="${candidate.address.street + ', ' + candidate.address.city+ ', ' + candidate.address.country.getName()}"></td>
+            <td th:text="${candidate.phone}"></td>
+            <td th:text="${candidate.email}"></td>
+            <td>
+                <ul>
+                    <li th:each="skill : ${candidate.getCandidateSkills()}"
+                        th:text="${skill.skill.skillName +' :' + skill.skillLevel}"></li>
+                </ul>
+            <td>
+                <form th:action="@{/jobs/{id}/{jobId}/{candidateId}/send-email(jobId = ${job.id}, candidateId = ${candidate.id}, id = ${company.id})}"
+                      method="post"
+                      style="display:inline;">
+                    <button type="submit">Apply</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

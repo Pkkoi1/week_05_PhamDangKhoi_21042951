@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+
+    <style>
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .skills-group {
+            margin-bottom: 15px;
+        }
+
+        .skills-group div {
+            margin-bottom: 10px;
+        }
+
+        .skills-group label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .skills-group input {
+            width: calc(100% - 110px);
+            padding: 8px;
+            box-sizing: border-box;
+        }
+    </style>
+    <script>
+        function addJobSkillRow() {
+            const tbody = document.getElementById("jobSkillsTableBody");
+            const lastRow = tbody.rows[tbody.rows.length - 1];
+            const newRow = lastRow.cloneNode(true);
+            const inputs = newRow.getElementsByTagName("input");
+            const selects = newRow.getElementsByTagName("select");
+
+            // Clear the values of the cloned inputs and selects
+            for (let input of inputs) {
+                input.value = "";
+            }
+            for (let select of selects) {
+                select.selectedIndex = 0;
+            }
+
+            const rowIndex = tbody.rows.length;
+            for (let select of selects) {
+                const thName = select.getAttribute("th:name");
+                if (thName) {
+                    const newThName = thName.replace(/\[.*?\]/, `[${rowIndex}]`);
+                    select.setAttribute("th:name", newThName);
+                }
+            }
+            for (let input of inputs) {
+                const thName = input.getAttribute("th:name");
+                if (thName) {
+                    const newThName = thName.replace(/\[.*?\]/, `[${rowIndex}]`);
+                    input.setAttribute("th:name", newThName);
+                }
+            }
+
+            tbody.appendChild(newRow);
+        }
+
+        function removeJobSkillRow() {
+            const tbody = document.getElementById("jobSkillsTableBody");
+            if (tbody.rows.length > 1) {
+                tbody.removeChild(tbody.rows[tbody.rows.length - 1]);
+            }
+        }
+    </script>
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <h1>Add new jobs for company</h1>
+    <div>
+        <p>Company name: <span th:text="${company.compName}"></span></p>
+    </div>
+
+    <h2>New jobs</h2>
+    <form th:action="@{/jobs/save/{id}(id=${company.id})}" th:object="${job}" method="post">
+        <input type="hidden" name="company_id" th:value="${company.id}">
+        <table>
+            <tr>
+                <td><label for="job_name">Job Title:</label></td>
+                <td><input type="text" id="job_name" th:field="*{jobName}"></td>
+            </tr>
+            <tr>
+                <td><label for="job_description">Job Description:</label></td>
+                <td><input type="text" id="job_description" th:field="*{jobDesc}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">Skills Requiring:</td>
+            </tr>
+            <tbody id="jobSkillsTableBody">
+            <tr>
+                <td>
+                    <select th:name="skills">
+                        <option value="">--Choose a skill--</option>
+                        <option th:each="availableSkill : ${skills}" th:value="${availableSkill.id}"
+                                th:text="${availableSkill.skillName}"></option>
+                    </select>
+                </td>
+                <td>
+                    <select th:name="skillLevels">
+                        <option th:each="level : ${skillLevels}" th:value="${level}"
+                                th:text="${level}"></option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" th:name="moreInfos" placeholder="More Infos"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button type="button" onclick="addJobSkillRow()">+</button>
+        <button type="button" onclick="removeJobSkillRow()">-</button>
+        <input type="submit" value="Add">
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoppotUnity</title>
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link rel="stylesheet" href="/CSS/header.css">
+    <style>
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #111111;
+        }
+
+        #skills, #suggests {
+            margin-top: 20px;
+        }
+
+        #skills th, #suggests th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #skills td, #suggests td {
+            background-color: #f9f9f9;
+        }
+
+        .back-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<header>
+    <nav class="header">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/candidates">Candidates</a></li>
+            <li><a href="/companies">Companies</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+<div class="container">
+    <form th:action="@{/candidates/show_edit_form/{id}(id=${candidate.id})}" method="get"
+          style="display:inline;">
+        <button type="submit">Edit</button>
+    </form>
+    <h1 th:text="${candidate.getFullName()}"></h1>
+    <table>
+        <tr>
+            <th>Email</th>
+            <td th:text="${candidate.email}"></td>
+        </tr>
+        <tr>
+            <th>Phone</th>
+            <td th:text="${candidate.phone}"></td>
+        </tr>
+        <tr>
+            <th>Birth Date</th>
+            <td th:text="${#dates.format(dob, 'dd/MM/yyyy')}"></td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td th:text="${candidate.address.street + ', ' + candidate.address.city+ ', ' + candidate.address.country.getName()}"></td>
+        </tr>
+    </table>
+    <h1>Skills</h1>
+    <table id="skills">
+        <tr>
+            <th>Skill</th>
+            <th>Level</th>
+            <th>Description</th>
+        </tr>
+        <tr th:each="skill, iStat : ${candidate.getCandidateSkills()}">
+            <td th:text="${skill.skill.skillName}"></td>
+            <td th:text="${skill.skillLevel}"></td>
+            <td th:text="${skill.moreInfos}"></td>
+        </tr>
+    </table>
+    <h1>Skills that you should learn</h1>
+    <table id="suggests">
+        <tr>
+            <th>No.</th>
+            <th>Skill</th>
+        </tr>
+        <tr th:each="suggest, iterStat : ${skills}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${suggest}"></td>
+        </tr>
+    </table>
+    <a href="/candidates" class="back-button">Back</a>
+</div>
+</body>
+</html>
