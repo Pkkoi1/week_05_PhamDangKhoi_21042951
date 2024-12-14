@@ -11,6 +11,9 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
 - **Lớp:** DHKTPM17A
 - **Giáo viên hướng dẫn:** Võ Văn Hải
 
+## Tài liệu 
+ - Word: [week_05_PhamDangKhoi_21042951_BaoCaoDeTai.docx](Document\week_05_PhamDangkhoi_21042951_BaoCaoDeTai.docx")
+ - Powerpoint: 
 ## Công nghệ sử dụng
 
 - **Backend:** Spring Boot, Spring Security, Spring Data JPA
@@ -63,17 +66,19 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
 
 ## Sơ đồ
 ### Class Diagram
-
-
-### Một số giao diện chính
-
-1. **Trang chủ**
-   - Giao diện thân thiện, dễ sử dụng để truy cập các chức năng chính.
-2. **Danh sách ứng viên**
-   - Hiển thị thông tin ứng viên và cho phép chỉnh sửa.
-3. **Danh sách công ty**
+![class_diagram.png](Figures/class_diagram.png)
+### Database Diagram
+![database_diagram.png](Figures/database_diagram.png)
+## Giao diện website
+### **Trang chủ**
+   ![Trang_chủ.png](Figures/Trang_chủ.png)
+### **Ứng viên**
+**Danh sách ứng viên**
+   ![Danh_sách_ứng_viên.png](Figures/Danh%20sách%20nhân%20viên_1.png)
+   ![Danh_sách_ứng_viên.png](Figures/Danh%20sách%20nhân%20viên_2.png)
+4. **Danh sách công ty**
    - Cung cấp thông tin về các công ty đã đăng ký.
-4. **Quản lý công việc**
+5. **Quản lý công việc**
    - Tìm kiếm và tạo mới công việc phù hợp.
 
 ## Kết luận và hướng phát triển
