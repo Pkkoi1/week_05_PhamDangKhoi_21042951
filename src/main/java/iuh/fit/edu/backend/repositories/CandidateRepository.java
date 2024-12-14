@@ -21,7 +21,7 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
     @Query("SELECT c FROM Candidate c  WHERE " +
             "UPPER(c.fullName) LIKE CONCAT('%', UPPER(?1), '%') OR " +
             "UPPER(c.phone) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "UPPER(c.email) LIKE CONCAT('%', UPPER(?1), '%') ")
+            "c.email LIKE ?1 ")
     Page<Candidate> findByKey(String ket, Pageable pageable);
 
     @Query("""

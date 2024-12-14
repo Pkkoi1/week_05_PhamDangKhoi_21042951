@@ -5,6 +5,7 @@
     <title>JoppotUnity</title>
     <link rel="stylesheet" href="/CSS/templates.css">
     <link rel="stylesheet" href="/CSS/header.css">
+    <link rel="stylesheet" href="/CSS/alert.css">
     <style>
         th, td {
             padding: 10px;
@@ -59,6 +60,8 @@
 </header>
 <body>
 <div class="container">
+    <div id="successMessage" th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div id="errorMessage" th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
     <form th:action="@{/candidates/show_edit_form/{id}(id=${candidate.id})}" method="get"
           style="display:inline;">
         <button type="submit">Edit</button>
@@ -108,5 +111,6 @@
     </table>
     <a href="/candidates" class="back-button">Back</a>
 </div>
+<script src="/JS/alert.js"></script>
 </body>
 </html>

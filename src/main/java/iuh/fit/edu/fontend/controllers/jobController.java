@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -89,39 +90,33 @@ public class jobController {
                           @RequestParam("skills") List<Long> skills,
                           @RequestParam("skillLevels") List<skillLevel> skillLevels,
                           @RequestParam("moreInfos") List<String> moreInfos,
-                          BindingResult result, Model model) {
-        job.getJobSkills().clear();
-        Optional<Company> companyOptional = companyRespository.findById(companyId);
-        Job job1 = new Job();
-        if (companyOptional.isPresent()) {
-
-            job1.setJobSkills(job.getJobSkills());
-            job1.setCompany(companyOptional.get());
-            job1.setJobName(job.getJobName());
-            job1.setJobDesc(job.getJobDesc());
-            jobRepository.save(job1);
-            for (int i = 0; i < skills.size(); i++) {
-                if (skills.get(i) != null) {
-                    JobSkill jobSkill = new JobSkill();
-                    Skill skill = skillRepository.findById(skills.get(i)).orElse(null);
-                    if (skill != null) {
-                        jobSkill.setSkill(skill);
-                        jobSkill.setSkillLevel(skillLevels.get(i));
-                        jobSkill.setMoreInfos(moreInfos.get(i));
-                        jobSkill.setJob(job1);
-
-                        JobSkillId jobSkillId = new JobSkillId();
-                        jobSkillId.setJobId(job1.getId());
-                        jobSkillId.setSkillId(skill.getId());
-                        jobSkill.setId(jobSkillId);
-
-                        job1.getJobSkills().add(jobSkill);
+                          BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            job.getJobSkills().clear();
+            Optional<Company> companyOptional = companyRespository.findById(companyId);
+            Job job1 = new Job();
+            if (companyOptional.isPresent()) {
+                job1.setJobSkills(job.getJobSkills());
+                job1.setCompany(companyOptional.get());
+                job1.setJobName(job.getJobName());
+                job1.setJobDesc(job.getJobDesc());
+                jobRepository.save(job1);
+                for (int i = 0; i < skills.size(); i++) {
+                    if (skills.get(i) != null) {
+                        JobSkill jobSkill = new JobSkill();
+                        Skill skill = skillRepository.findById(skills.get(i)).orElse(null);
+                        if (skill != null) {
+                            saveAndUpdate(i, skill, jobSkill, job1, skillLevels, moreInfos);
+                        }
                     }
                 }
             }
+            jobSkillRepository.saveAll(job1.getJobSkills());
+            redirectAttributes.addFlashAttribute("message", "Job saved successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to save job: " + e.getMessage());
         }
-        jobSkillRepository.saveAll(job1.getJobSkills());
-        return "redirect:/companies/{id}";
+        return "redirect:/companies/" + companyId;
     }
 
     @GetMapping("/show_candidate_matching/{id}/{jobID}")
@@ -159,11 +154,21 @@ public class jobController {
     }
 
     @PostMapping("/{id}/{jobId}/{candidateId}/send-email")
-    public String sendEmail(@PathVariable("jobId") Long jobId, @PathVariable("candidateId") Long candidateId, Model model) {
-        Job job = jobService.findById(jobId);
-        Candidate candidate = candidateRepository.findById(candidateId).get();
-        emailService.sendEmail(candidate, job);
-        return "redirect:/jobs/{id}";
+    public String sendEmail(@PathVariable("jobId") Long jobId, @PathVariable("candidateId") Long candidateId,
+                            @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            Job job = jobService.findById(jobId);
+            Candidate candidate = candidateRepository.findById(candidateId).get();
+            String emailResult = emailService.sendEmail(candidate, job);
+            if (emailResult.equals("Email sent successfully.")) {
+                redirectAttributes.addFlashAttribute("message", emailResult);
+            } else {
+                redirectAttributes.addFlashAttribute("error", emailResult);
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to send email: " + e.getMessage());
+        }
+        return "redirect:/jobs/show_candidate_matching/" + id + "/" + jobId;
     }
 
     @GetMapping("/{id}")
@@ -200,36 +205,43 @@ public class jobController {
                             @RequestParam("skillLevels") List<skillLevel> skillLevels,
                             @RequestParam("moreInfos") List<String> moreInfos,
                             @RequestParam("compId") Long compId,
-
-                            BindingResult result, Model model) {
-        List<JobSkill> jobSkills = jobRepository.findById(job.getId()).get().getJobSkills();
-        List<JobSkill> delete = new ArrayList<>(jobSkills);
-        job.setCompany(companyRespository.findById(compId).get());
-        jobRepository.save(job);
-        for (int i = 0; i < skills.size(); i++) {
-            if (skills.get(i) != null) {
-                JobSkill jobSkill = new JobSkill();
-                Skill skill = skillRepository.findById(skills.get(i)).orElse(null);
-                if (skill != null) {
-                    jobSkill.setSkill(skill);
-                    jobSkill.setSkillLevel(skillLevels.get(i));
-                    jobSkill.setMoreInfos(moreInfos.get(i));
-                    jobSkill.setJob(job);
-                    JobSkillId jobSkillId = new JobSkillId();
-                    jobSkillId.setJobId(job.getId());
-                    jobSkillId.setSkillId(skill.getId());
-                    jobSkill.setId(jobSkillId);
-
-                    job.getJobSkills().add(jobSkill);
+                            BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            List<JobSkill> jobSkills = jobRepository.findById(job.getId()).get().getJobSkills();
+            List<JobSkill> delete = new ArrayList<>(jobSkills);
+            job.setCompany(companyRespository.findById(compId).get());
+            jobRepository.save(job);
+            for (int i = 0; i < skills.size(); i++) {
+                if (skills.get(i) != null) {
+                    JobSkill jobSkill = new JobSkill();
+                    Skill skill = skillRepository.findById(skills.get(i)).orElse(null);
+                    if (skill != null) {
+                        saveAndUpdate(i, skill, jobSkill, job, skillLevels, moreInfos);
+                    }
                 }
             }
-        }
-        for (JobSkill jobSkill : job.getJobSkills()) {
-            delete.removeIf(skill -> skill.getId().getSkillId().equals(jobSkill.getId().getSkillId()));
-        }
-        jobSkillRepository.deleteAll(delete);
-        jobSkillRepository.saveAll(job.getJobSkills());
+            for (JobSkill jobSkill : job.getJobSkills()) {
+                delete.removeIf(skill -> skill.getId().getSkillId().equals(jobSkill.getId().getSkillId()));
+            }
+            jobSkillRepository.deleteAll(delete);
+            jobSkillRepository.saveAll(job.getJobSkills());
 
+            redirectAttributes.addFlashAttribute("message", "Job updated successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update job: " + e.getMessage());
+        }
         return "redirect:/companies/" + compId;
+    }
+
+    public void saveAndUpdate(int i, Skill skill, JobSkill jobSkill, Job job1, List<skillLevel> skillLevels, List<String> moreInfos) {
+        jobSkill.setSkill(skill);
+        jobSkill.setSkillLevel(skillLevels.get(i));
+        jobSkill.setMoreInfos(moreInfos.get(i));
+        jobSkill.setJob(job1);
+        JobSkillId jobSkillId = new JobSkillId();
+        jobSkillId.setJobId(job1.getId());
+        jobSkillId.setSkillId(skill.getId());
+        jobSkill.setId(jobSkillId);
+        job1.getJobSkills().add(jobSkill);
     }
 }

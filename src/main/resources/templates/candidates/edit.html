@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/CSS/templates.css">
     <link rel="stylesheet" href="/CSS/header.css">
     <link rel="stylesheet" href="/CSS/inputSubmit.css">
+    <link rel="stylesheet" href="/CSS/alert.css">
     <style>
 
         #skills {
@@ -91,6 +92,7 @@
 </header>
 <body>
 <div class="container">
+
     <h1>Edit Candidate</h1>
     <button type="button" onclick="location.href='http://localhost:8080/candidates'">Back</button>
     <form action="#" th:action="@{/candidates/update}" th:object="${candidate}" method="post">
@@ -165,5 +167,6 @@
     </form>
 
 </div>
+<script src="/JS/alert.JS"></script>
 </body>
 </html>

@@ -109,3 +109,20 @@ a {
 a:hover {
     color: #007bff;
 }
+
+.skills {
+    border-radius: 12px;
+    padding: 5px 10px;
+    display: inline-block;
+    margin: 2px;
+    color: #000000;
+    font-size: 13px;
+}
+
+.skills:nth-child(odd) {
+    background-color: #f7c235;
+}
+
+.skills:nth-child(even) {
+    background-color: #dfdfe0;
+}

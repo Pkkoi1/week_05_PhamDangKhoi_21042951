@@ -5,38 +5,10 @@
     <title>JoppotUnity</title>
     <link rel="stylesheet" href="/CSS/templates.css">
     <link rel="stylesheet" href="/CSS/header.css">
-    <style>
-        input[type="text"], input[type="date"], select {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+    <link rel="stylesheet" href="/CSS/inputSubmit.css">
+    <link rel="stylesheet" href="/CSS/alert.css">
 
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
 
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-
-        .skills {
-            list-style-type: circle;
-        }
-    </style>
 </head>
 <header>
     <nav class="header">
@@ -49,9 +21,16 @@
     </nav>
 </header>
 <body>
+<div id="successMessage" th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+<div id="errorMessage" th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 <div class="container">
     <form action="/companies" method="get">
         <button type="submit">Back</button>
+    </form>
+    <br>
+    <form th:action="@{/companies/show_edit_form/{id}(id=${company.id})}" method="get"
+          style="display:inline;">
+        <button type="submit">Edit</button>
     </form>
     <h1>About company</h1>
     <div>
@@ -90,7 +69,10 @@
                 </ul>
             </td>
             <td>
-                <a th:href="@{/jobs/edit/{id}(id = ${job.id})}">Edit</a>
+                <form th:action="@{/jobs/edit/{id}(id = ${job.id})}"
+                      method="get" style="display:inline;">
+                    <button type="submit">Edit</button>
+                </form>
             </td>
             <td>
                 <form th:action="@{/jobs/show_candidate_matching/{id}/{jobID}(id=${company.id}, jobID=${job.id})}"
@@ -101,5 +83,6 @@
         </tr>
     </table>
 </div>
+<script src="/JS/alert.js"></script>
 </body>
 </html>

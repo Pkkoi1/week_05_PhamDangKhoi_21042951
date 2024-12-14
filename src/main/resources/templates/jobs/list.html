@@ -38,12 +38,11 @@
                 <h2 th:text="${iStat.index + 1} + '. ' + ${job.jobName}" class="title"></h2>
                 <p><strong>Company:</strong> <a th:href="@{'/companies/' + ${job.company.id}}"
                                                 th:text="${job.company.compName}"></a></p>
-                <p><strong>Skills:</strong></p>
-                <ul>
-                    <li th:each="skill : ${job.getJobSkills()}"
-                        th:text="${skill.skill.skillName} + ' ,' + ${skill.skill.type} + ': ' + ${skill.skillLevel}"
-                        class="skills"></li>
-                </ul>
+                <p><strong>Skills required:</strong></p>
+                <div th:each="skill : ${job.getJobSkills()}" th:text="${skill.skill.skillName}"
+                     class="skills">
+                </div>
+
             </div>
         </a>
     </div>

@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -93,16 +94,26 @@ public class CompanyController {
     }
 
     @PostMapping("/update")
-    public String updateCompany(@ModelAttribute("company") Company company, BindingResult result, Model model) {
-        addressRepository.save(company.getAddress());
-        companyRespository.save(company);
-        return "redirect:/companies";
+    public String updateCompany(@ModelAttribute("company") Company company, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            addressRepository.save(company.getAddress());
+            companyRespository.save(company);
+            redirectAttributes.addFlashAttribute("message", "Company updated successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update company: " + e.getMessage());
+        }
+        return "redirect:/companies/" + company.getId();
     }
 
     @PostMapping("/save")
-    public String saveCompany(@ModelAttribute("company") Company company, BindingResult result, Model model) {
-        addressRepository.save(company.getAddress());
-        companyRespository.save(company);
+    public String saveCompany(@ModelAttribute("company") Company company, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            addressRepository.save(company.getAddress());
+            companyRespository.save(company);
+            redirectAttributes.addFlashAttribute("message", "Company saved successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to save company: " + e.getMessage());
+        }
         return "redirect:/companies";
     }
 

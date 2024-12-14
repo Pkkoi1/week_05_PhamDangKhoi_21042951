@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.ZoneId;
 import java.util.*;
@@ -103,34 +104,39 @@ public class CandidateController {
                                   @RequestParam("skills") List<Long> skills,
                                   @RequestParam("skillLevels") List<skillLevel> skillLevels,
                                   @RequestParam("moreInfos") List<String> moreInfos,
-                                  BindingResult result, Model model) {
-        List<CandidateSkill> candidateSkills = candidateRepository.findById(candidate.getId()).get().getCandidateSkills();
-        List<CandidateSkill> delete = new ArrayList<>(candidateSkills);
-        candidateRepository.save(candidate);
-        for (int i = 0; i < skills.size(); i++) {
-            if (skills.get(i) != null) {
-                CandidateSkill candidateSkill = new CandidateSkill();
-                Skill skill = skillRepository.findById(skills.get(i)).orElse(null);
-                if (skill != null) {
-                    candidateSkill.setSkill(skill);
-                    candidateSkill.setSkillLevel(skillLevels.get(i));
-                    candidateSkill.setMoreInfos(moreInfos.get(i));
-                    candidateSkill.setCan(candidate);
-                    CandidateSkillId candidateSkillId = new CandidateSkillId();
-                    candidateSkillId.setCanId(candidate.getId());
-                    candidateSkillId.setSkillId(skill.getId());
-                    candidateSkill.setId(candidateSkillId);
+                                  BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            List<CandidateSkill> candidateSkills = candidateRepository.findById(candidate.getId()).get().getCandidateSkills();
+            List<CandidateSkill> delete = new ArrayList<>(candidateSkills);
+            candidateRepository.save(candidate);
+            for (int i = 0; i < skills.size(); i++) {
+                if (skills.get(i) != null) {
+                    CandidateSkill candidateSkill = new CandidateSkill();
+                    Skill skill = skillRepository.findById(skills.get(i)).orElse(null);
+                    if (skill != null) {
+                        candidateSkill.setSkill(skill);
+                        candidateSkill.setSkillLevel(skillLevels.get(i));
+                        candidateSkill.setMoreInfos(moreInfos.get(i));
+                        candidateSkill.setCan(candidate);
+                        CandidateSkillId candidateSkillId = new CandidateSkillId();
+                        candidateSkillId.setCanId(candidate.getId());
+                        candidateSkillId.setSkillId(skill.getId());
+                        candidateSkill.setId(candidateSkillId);
 
-                    candidate.getCandidateSkills().add(candidateSkill);
+                        candidate.getCandidateSkills().add(candidateSkill);
+                    }
                 }
             }
-        }
-        for (CandidateSkill candidateSkill : candidate.getCandidateSkills()) {
-            delete.removeIf(skill -> skill.getId().getSkillId().equals(candidateSkill.getId().getSkillId()));
-        }
-        candidateSkillRepository.deleteAll(delete);
-        candidateSkillRepository.saveAll(candidate.getCandidateSkills());
+            for (CandidateSkill candidateSkill : candidate.getCandidateSkills()) {
+                delete.removeIf(skill -> skill.getId().getSkillId().equals(candidateSkill.getId().getSkillId()));
+            }
+            candidateSkillRepository.deleteAll(delete);
+            candidateSkillRepository.saveAll(candidate.getCandidateSkills());
 
+            redirectAttributes.addFlashAttribute("message", "Candidate updated successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update candidate: " + e.getMessage());
+        }
         return "redirect:/candidates/detail/" + candidate.getId();
     }
 
@@ -139,31 +145,36 @@ public class CandidateController {
                                 @RequestParam("skills") List<Long> skills,
                                 @RequestParam("skillLevels") List<skillLevel> skillLevels,
                                 @RequestParam("moreInfos") List<String> moreInfos,
-                                BindingResult result, Model model) {
-        candidate.getCandidateSkills().clear();
-        for (int i = 0; i < skills.size(); i++) {
-            if (skills.get(i) != null) {
-                CandidateSkill candidateSkill = new CandidateSkill();
-                Skill skill = skillRepository.findById(skills.get(i)).orElse(null);
-                if (skill != null) {
-                    candidateSkill.setSkill(skill);
-                    candidateSkill.setSkillLevel(skillLevels.get(i));
-                    candidateSkill.setMoreInfos(moreInfos.get(i));
-                    candidateSkill.setCan(candidate);
+                                BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            candidate.getCandidateSkills().clear();
+            for (int i = 0; i < skills.size(); i++) {
+                if (skills.get(i) != null) {
+                    CandidateSkill candidateSkill = new CandidateSkill();
+                    Skill skill = skillRepository.findById(skills.get(i)).orElse(null);
+                    if (skill != null) {
+                        candidateSkill.setSkill(skill);
+                        candidateSkill.setSkillLevel(skillLevels.get(i));
+                        candidateSkill.setMoreInfos(moreInfos.get(i));
+                        candidateSkill.setCan(candidate);
 
-                    CandidateSkillId canSkID = new CandidateSkillId();
-                    canSkID.setCanId(candidate.getId());
-                    canSkID.setSkillId(skill.getId());
-                    candidateSkill.setId(canSkID);
+                        CandidateSkillId canSkID = new CandidateSkillId();
+                        canSkID.setCanId(candidate.getId());
+                        canSkID.setSkillId(skill.getId());
+                        candidateSkill.setId(canSkID);
 
-                    candidate.getCandidateSkills().add(candidateSkill);
+                        candidate.getCandidateSkills().add(candidateSkill);
+                    }
                 }
             }
-        }
-        addressRepository.save(candidate.getAddress());
-        candidateRepository.save(candidate);
-        candidateSkillRepository.saveAll(candidate.getCandidateSkills());
+            addressRepository.save(candidate.getAddress());
+            candidateRepository.save(candidate);
+            candidateSkillRepository.saveAll(candidate.getCandidateSkills());
 
+            redirectAttributes.addFlashAttribute("message", "Candidate saved successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to save candidate: " + e.getMessage());
+        }
         return "redirect:/candidates";
     }
 

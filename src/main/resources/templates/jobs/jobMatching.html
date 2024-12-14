@@ -39,11 +39,13 @@
             <td>
                 <ul>
                     <li th:each="skill : ${job.getJobSkills()}"
-                        th:text="${skill.skill.skillName} + ' ,' + ${skill.skill.type} + ': ' + ${skill.skillLevel}"></li>
+                        th:text="${skill.skill.skillName} + ' ,' + ${skill.skill.type} + ': ' + ${skill.skillLevel}"
+                        class="skills"></li>
                 </ul>
             </td>
             <td><a th:text="${job.company.compName}"
-                   th:href="@{/jobs/{id}(id=${job.company.id})}"></a>
+                   th:href="@{/companies/{id}(id=${job.company.id})}"
+            ></a>
             </td>
 
         </tr>

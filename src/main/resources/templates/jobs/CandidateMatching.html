@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="/CSS/templates.css">
     <link rel="stylesheet" href="/CSS/header.css">
     <link rel="stylesheet" href="/CSS/inputSubmit.css">
+    <link rel="stylesheet" href="/CSS/alert.css">
+
 </head>
 <header>
     <nav class="header">
@@ -19,6 +21,8 @@
 </header>
 <body>
 <div class="container">
+    <div id="successMessage" th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div id="errorMessage" th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
     <h1>About company</h1>
     <div>
         <p>Company name: <span th:text="${company.compName}"></span></p>
@@ -59,14 +63,15 @@
             <td>
                 <ul>
                     <li th:each="skill : ${candidate.getCandidateSkills()}"
-                        th:text="${skill.skill.skillName +' :' + skill.skillLevel}"></li>
+                        th:text="${skill.skill.skillName +' :' + skill.skillLevel}"
+                        class="skills"></li>
                 </ul>
             </td>
             <td>
                 <form th:action="@{/jobs/{id}/{jobId}/{candidateId}/send-email(jobId = ${job.id}, candidateId = ${candidate.id}, id = ${company.id})}"
                       method="post"
                       style="display:inline;">
-                    <button type="submit">Apply</button>
+                    <button type="submit">Send Mail</button>
                 </form>
             </td>
         </tr>
@@ -83,5 +88,6 @@
            th:class="${pageNumbers == candidatePage.number + 1} ? 'active' : ''"></a>
     </div>
 </div>
+<script src="/JS/alert.JS"></script>
 </body>
 </html>

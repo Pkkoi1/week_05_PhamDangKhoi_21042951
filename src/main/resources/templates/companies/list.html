@@ -5,6 +5,7 @@
     <title>JoppotUnity</title>
     <link rel="stylesheet" href="/CSS/templates.css">
     <link rel="stylesheet" href="/CSS/header.css">
+    <link rel="stylesheet" href="/CSS/alert.css">
     <style>
         a {
             text-decoration: none;
@@ -29,6 +30,8 @@
 </header>
 <body>
 <div class="container">
+    <div id="successMessage" th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div id="errorMessage" th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
     <h1>List company</h1>
     <button class="btn" type="button" onclick="location.href='http://localhost:8080'">Back</button>
     <button id="addBtn" onclick="location.href='/companies/show_add_form'">
@@ -92,5 +95,6 @@
            th:class="${pageNumbers == companyPage.number + 1} ? 'active':''"></a>
     </div>
 </div>
+<script src="/JS/alert.js"></script>
 </body>
 </html>
