@@ -58,8 +58,12 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
 
 4. **Tìm kiếm và lọc**
    - Tìm kiếm theo tên, vị trí, kỹ năng và nhiều tiêu chí khác.
+5. **Gửi Mail ứng tuyển**
+   - Gửi mail ứng tuyển cho ứng viên phù hợp
 
-## Minh họa
+## Sơ đồ
+### Class Diagram
+
 
 ### Một số giao diện chính
 
