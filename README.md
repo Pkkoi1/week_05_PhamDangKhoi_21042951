@@ -157,7 +157,16 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
   
    ![jobDetail.png](Figures/jobDetail.png)
 
-  ### **Tìm kiếm*
+**Danh sách ứng viện phù hợp với công việc**
+- Người dùng có thể xem danh sách của các ứng viên phù hợp với công việc của công ty.
+- Tại trang thông tin chi tiết của công ty, tại mục công việc chọn 'view' ở cột 'View candidate suitable'
+- Nhấn nút `Back` để quay lại danh sách công việc.
+  
+   ![candidateMatching.png](Figures/candidateMatching.png)
+   ![candidateMatching2.png](Figures/candidateMatching2.png)
+
+
+### **Tìm kiếm*
 **Tìm kiếm ứng viên**
 - Người dùng có thể tìm kiếm ứng viên theo các tiêu chí như: kỹ năng, tên, email, số điện thoại
 - Tại các giao diện: Danh sách ứng viên,  ứng viên phù hợp với công việc; trên thanh tìm kiếm, người dùng có thể nhập các tiêu chí tìm kiếm vào và nhấn nút 'find' để tìm kiếm
