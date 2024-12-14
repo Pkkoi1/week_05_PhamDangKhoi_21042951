@@ -74,6 +74,7 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
    ![Home.png](Figures/Home.png)
 ### **Ứng viên**
 **Danh sách ứng viên**
+
    ![listCandidate1.png](Figures/listCandidate1.png)
    ![listCandidate2.png](Figures/listCandidate2.png)
 
@@ -105,6 +106,7 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
 
 ### **Công ty**
 **Danh sách công ty**
+
    ![listCompany1.png](Figures/listCompany1.png)
    ![listCompany2.png](Figures/listCompany2.png)
 
@@ -130,6 +132,7 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
   
 ### **Công việc*
 **Danh sách công việc**
+
    ![ListJob.png](Figures/ListJob.png)
  
 **Thêm công việc**
@@ -151,6 +154,7 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
 - Người dùng có thể xem thông tin chi tiết của công việc mà mình đang tìm hiểu và xem các công việc liên quan đến công ty.
 - Tại trang danh sách công việc, nhấn vào tên của công việc để đi đến trang
 - Nhấn nút `Back` để quay lại danh sách công việc.
+  
    ![jobDetail.png](Figures/jobDetail.png)
 
   ### **Tìm kiếm*
