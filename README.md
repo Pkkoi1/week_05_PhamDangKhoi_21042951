@@ -59,33 +59,6 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
 4. **Tìm kiếm và lọc**
    - Tìm kiếm theo tên, vị trí, kỹ năng và nhiều tiêu chí khác.
 
-## Hướng dẫn cài đặt
-
-1. **Clone dự án từ GitHub:**
-   ```bash
-   git clone <repository-url>
-   ```
-2. **Cài đặt các công cụ cần thiết:**
-   - Cài đặt JDK 8 hoặc cao hơn.
-   - Cài đặt MariaDB và tạo cơ sở dữ liệu.
-   - Cài đặt IntelliJ IDEA hoặc Spring Tool Suite.
-3. **Cấu hình dự án:**
-   - Cập nhật thông tin cơ sở dữ liệu trong tệp `application.properties`.
-   ```properties
-   spring.datasource.url=jdbc:mariadb://localhost:3306/joppotunity
-   spring.datasource.username=<username>
-   spring.datasource.password=<password>
-   ```
-4. **Build và chạy ứng dụng:**
-   - Sử dụng Gradle để build dự án.
-   ```bash
-   ./gradlew build
-   ```
-   - Chạy ứng dụng:
-   ```bash
-   ./gradlew bootRun
-   ```
-
 ## Minh họa
 
 ### Một số giao diện chính
