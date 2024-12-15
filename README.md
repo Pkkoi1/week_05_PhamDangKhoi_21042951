@@ -186,6 +186,7 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
 ### **Gửi mail ứng tuyển*
 - Tại trang danh sách ứng viên phù hợp với công việc, đại diện công ty có thể gửi mail ứng tuyến đến công ty
 - Nhấn nút 'Send mail' để gửi mail
+  
    ![sendMail.png](Figures/sendMail.png)
 
 ## Kết luận và hướng phát triển
