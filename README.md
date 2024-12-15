@@ -16,7 +16,7 @@ Joppotunity là một trang web được thiết kế nhằm hỗ trợ việc q
  - Powerpoint: [week_05_PhamDangKhoi_21042951_BaoCaoDeTai.pptx](Document/week_05_PhamDangkhoi_21042951_BaoCaoDeTai.pptx)
 ## Công nghệ sử dụng
 
-- **Backend:** Spring Boot, Spring Security, Spring Data JPA
+- **Backend:** Spring Boot, Spring Data JPA
 - **Frontend:** Thymeleaf, HTML, CSS, JavaScript
 - **Database:** MariaDB
 - **Build Tool:** Gradle
